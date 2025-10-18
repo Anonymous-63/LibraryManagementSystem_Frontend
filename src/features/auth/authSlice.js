@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { storage } from "../../utils/storage";
 
 function getUserFromToken(token) {
     if (!token) return null;

@@ -1,11 +1,23 @@
-import Body from "./layouts/Body"
+import { BrowserRouter, useNavigate } from "react-router";
+import { AppRoutes } from "./app/router/routes";
+import { useEffect } from "react";
+import { NavigationService } from "./app/router/NavigationService";
 
-function App() {
+export default function App() {
   return (
     <>
-      <Body />
+      <BrowserRouter>
+        <InitNavigation />
+        <AppRoutes />
+      </BrowserRouter>
     </>
   )
 }
 
-export default App
+function InitNavigation() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    NavigationService.setNavigate(navigate);
+  }, [navigate]);
+  return null;
+}
