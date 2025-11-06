@@ -1,11 +1,11 @@
 import { Outlet } from "react-router";
-import Header from "./Header";
+import Header from "../../components/shared/Header";
 
 export default function RootLayout() {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-base-300">
             <Header />
-            <main className="flex-1 p-4">
+            <main className="flex flex-1 items-center justify-center p-4">
                 <Outlet />
             </main>
         </div>

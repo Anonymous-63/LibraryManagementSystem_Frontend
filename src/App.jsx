@@ -2,6 +2,7 @@ import { BrowserRouter, useNavigate } from "react-router";
 import { AppRoutes } from "./app/router/routes";
 import { useEffect } from "react";
 import { NavigationService } from "./app/router/NavigationService";
+import NotificationContainer from "./components/shared/NotificationContainer";
 
 export default function App() {
   return (
@@ -9,6 +10,7 @@ export default function App() {
       <BrowserRouter>
         <InitNavigation />
         <AppRoutes />
+        <NotificationContainer />
       </BrowserRouter>
     </>
   )

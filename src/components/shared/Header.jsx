@@ -1,12 +1,18 @@
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../features/auth/authSlice";
+
 const Header = () => {
+    const { user } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
     return (
         <>
-            <div className="navbar bg-base-300 shadow-sm">
+            {user && <div className="navbar bg-base-100 shadow-sm">
                 <div className="flex-1">
-                    <a className="btn btn-ghost text-xl">daisyUI</a>
+                    <a className="btn btn-ghost text-xl">LibraSys</a>
                 </div>
                 <div className="flex gap-2 px-2">
                     <div className="dropdown dropdown-end">
+                        Welcome, {user?.email}
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                             <div className="w-10 rounded-full">
                                 <img
@@ -24,11 +30,11 @@ const Header = () => {
                                 </a>
                             </li>
                             <li><a>Settings</a></li>
-                            <li><a>Logout</a></li>
+                            <li><a onClick={() => dispatch(logout())}>Logout</a></li>
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div>}
         </>
     )
 }

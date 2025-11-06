@@ -9,6 +9,7 @@ import LoginPage from "../../features/auth/pages/LoginPage";
 import ReportsPage from "../../features/dashboard/pages/ReportsPage";
 import UsersListPage from "../../features/user/pages/UsersListPage";
 import UserDetailPage from "../../features/user/pages/UserDetailPage";
+import { ROLES } from "../../utils/constants";
 
 export const AppRoutes = () => (
     <Routes>
@@ -22,7 +23,7 @@ export const AppRoutes = () => (
             </Route>
 
             {/* Protected dashboard routes */}
-            <Route element={<ProtectedRoute roles={['admin', 'user']} />}>
+            <Route element={<ProtectedRoute roles={[ROLES.ADMIN]} />}>
                 <Route element={<DashboardLayout />}>
                     <Route path="dashboard" element={<DashboardPage />} />
                     <Route path="reports" element={<ReportsPage />} />
