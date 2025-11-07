@@ -35,6 +35,7 @@ const initialState = {
     accessToken: accessToken || null,
     privileges: getPrivilegesFromToken(accessToken),
     status: 'idle',
+    policies: {},
 };
 
 export const login = createAsyncThunk('auth/login', async (credentials) => {
@@ -59,14 +60,17 @@ const slice = createSlice({
                 roles: decoded.roles
             }
             state.privileges = decoded.privileges || []
-            storage.set('accessToken', action.payload)
+            storage.set('refreshToken', action.payload)
         },
         logout(state) {
             state.user = null
             state.accessToken = null
             state.privileges = []
             storage.remove('accessToken')
-        }
+        },
+        setPolicies(state, action) {
+            state.policies = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -93,5 +97,5 @@ const slice = createSlice({
     }
 })
 
-export const { logout, refreshTokenSuccess } = slice.actions
+export const { logout, refreshTokenSuccess, setPolicies } = slice.actions
 export default slice.reducer

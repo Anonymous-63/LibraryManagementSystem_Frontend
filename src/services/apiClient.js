@@ -1,11 +1,11 @@
 import axios from "axios"
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:8080/',
+    baseURL: import.meta.env.VITE_API_BASE || 'http://localhost:8080',
     withCredentials: true,
 })
 
-let getAccessToken = () => null
+let getAccessToken = () => localStorage.getItem('accessToken') || null;
 let dispatchFn = () => { }
 
 export const setApiAuth = ({ getToken, dispatch }) => {

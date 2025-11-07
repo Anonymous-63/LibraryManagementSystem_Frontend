@@ -31,7 +31,7 @@ const LoginPage = () => {
     } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            email: "admin@gmail.com",
+            email: "admin@example.com",
             password: "admin123",
         },
     });
