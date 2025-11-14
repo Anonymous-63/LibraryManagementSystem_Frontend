@@ -10,9 +10,8 @@ import googleImg from "@/assets/icons/google.png"
 import githubImg from "@/assets/icons/github.png"
 
 const schema = yup.object({
-    email: yup
+    id: yup
         .string()
-        .email("Invalid email format")
         .required("Email is required"),
     password: yup
         .string()
@@ -31,8 +30,8 @@ const LoginPage = () => {
     } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            email: "admin@example.com",
-            password: "admin123",
+            id: "operator1",
+            password: "password123",
         },
     });
 
@@ -58,9 +57,9 @@ const LoginPage = () => {
                     <h2 className="card-title text-xl mb-4">Login</h2>
                     <form onSubmit={handleSubmit(onFinish)}>
                         <FormInput
-                            name="email"
+                            name="id"
                             label="Email"
-                            type="email"
+                            type="text"
                             placeholder="Enter your email"
                             control={control}
                             errors={errors}

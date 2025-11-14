@@ -10,6 +10,7 @@ import ReportsPage from "../../features/dashboard/pages/ReportsPage";
 import UsersListPage from "../../features/user/pages/UsersListPage";
 import UserDetailPage from "../../features/user/pages/UserDetailPage";
 import { ROLES } from "../../utils/constants";
+import RolePage from "../../features/role/page/RolePage";
 
 export const AppRoutes = () => (
     <Routes>
@@ -23,12 +24,13 @@ export const AppRoutes = () => (
             </Route>
 
             {/* Protected dashboard routes */}
-            <Route element={<ProtectedRoute roles={[ROLES.ADMIN]} />}>
+            <Route element={<ProtectedRoute roles={[ROLES.ADMIN, ROLES.USER]} />}>
                 <Route element={<DashboardLayout />}>
                     <Route path="dashboard" element={<DashboardPage />} />
                     <Route path="reports" element={<ReportsPage />} />
                     <Route path="users" element={<UsersListPage />} />
                     <Route path="users/:id" element={<UserDetailPage />} />
+                    <Route path="roles" element={<RolePage/>}/>
                 </Route>
             </Route>
 

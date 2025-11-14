@@ -5,7 +5,7 @@ import api from "../../services/apiClient"
 export const savePolicy = createAsyncThunk(
     'abacPolicy/save',
     async (policyData) => {
-        const res = await api.post('/abac-policies', policyData, { withCredentials: true });
+        const res = await api.post('/policies', policyData, { withCredentials: true });
         return res.data;
     }
 );
@@ -14,18 +14,17 @@ export const savePolicy = createAsyncThunk(
 export const updatePolicy = createAsyncThunk(
     'abacPolicy/update',
     async ({ id, policyData }) => {
-        const res = await api.put(`/abac-policies/${id}`, policyData, { withCredentials: true });
+        const res = await api.put(`/policies/${id}`, policyData, { withCredentials: true });
         return res.data;
     }
 );
 
-export const getPolicies = createAsyncThunk('abacPolicy/get', async () => {
-    try {
+export const getPolicies = createAsyncThunk("abacPolicy/get", async () => {
+  const res = await api.get("/policies", { withCredentials: true });
+  return res.data;
+});
 
-        const res = await api.get(`/books`, { withCredentials: true })
-        return res.data;
-    } catch (error) {
-        console.log(error);
-
-    }
-})
+export const getMyPolicies = createAsyncThunk("abacPolicy/mine", async () => {
+  const res = await api.get("/policies/mine", { withCredentials: true });
+  return res.data;
+});

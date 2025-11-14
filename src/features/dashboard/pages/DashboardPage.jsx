@@ -1,78 +1,113 @@
 import { useDispatch } from "react-redux";
 import AbacPolicyForm from "./AbacPolicyForm";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAbac } from "../useAbac";
 import { setPolicies } from "../../auth/authSlice";
-import { getPolicies } from "../dashboardSlice";
-
+import { getMyPolicies, getPolicies } from "../dashboardSlice";
+import { useNavigate } from "react-router";
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [policiesData, setPoliciesData] = useState([]);
 
-  // Fetch policies from backend on mount
+  // Fetch all policies (admin view)
+  const fetchPolicies = async () => {
+    try {
+      const res = await dispatch(getPolicies()).unwrap();
+
+      setPoliciesData(res.data);
+    } catch (error) {
+      console.error("Error loading policies:", error);
+      setPoliciesData([]); // fail-safe
+    }
+  };
+
   useEffect(() => {
-    const res = dispatch(getPolicies());
-    dispatch(setPolicies(res.data))
+    const load = async () => {
+      // Load all policies for table
+      await fetchPolicies();
+
+      // Load user's allowed ABAC permissions
+      const myPolicies = await dispatch(getMyPolicies()).unwrap();
+      dispatch(setPolicies(myPolicies));
+    };
+
+    load();
   }, []);
 
-  const canRead = useAbac("doc", "ADD");
-  const canUpdate = useAbac("doc", "UPDATE");
-  const canViewAdminPanel = useAbac("ADMIN_PANEL", "VIEW");
+  // ABAC checks
+  const canRead = useAbac("MANAGE_POLICY", "VIEW");
 
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">ABAC Policy Management</h1>
-      <AbacPolicyForm />
-      {/* <AbacPolicyList /> */}
-      <div className="min-h-screen bg-gray-50 p-8">
-        <h1 className="text-2xl font-bold mb-6">📚 Book Management</h1>
 
-        {/* READ Section */}
-        {canRead ? (
-          <div className="bg-white p-4 rounded-lg shadow mb-4">
-            <h2 className="text-lg font-semibold mb-2">Book List</h2>
-            <ul className="list-disc list-inside text-gray-700">
-              <li>Spring Boot in Action</li>
-              <li>Clean Code</li>
-              <li>Effective Java</li>
-            </ul>
-          </div>
-        ) : (
-          <div className="bg-red-50 text-red-700 p-3 rounded mb-4">
-            ❌ You are not allowed to view books.
-          </div>
-        )}
+      {/* --- FLEX CONTAINER --- */}
+      <div className="flex gap-6">
 
-        {/* UPDATE Button */}
-        <div className="mb-6">
-          {canUpdate ? (
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-              ✏️ Edit Book
-            </button>
-          ) : (
-            <button
-              className="bg-gray-300 text-gray-600 px-4 py-2 rounded cursor-not-allowed"
-              disabled
-            >
-              🔒 Edit Disabled
-            </button>
+        {/* LEFT SIDE: FORM */}
+        <div className="w-1/2 p-4 rounded shadow">
+          <AbacPolicyForm />
+        </div>
+
+        {/* RIGHT SIDE: TABLE */}
+        <div className="w-1/2 p-4 rounded shadow overflow-auto">
+          {canRead && (
+            <table className="table w-full">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Policy Name</th>
+                  <th>Resource</th>
+                  <th>Action</th>
+                  <th>Effect</th>
+                  <th>Enabled</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {Array.isArray(policiesData) && policiesData.length > 0 ? (
+                  policiesData.map((policy) => (
+                    <tr key={policy.id}>
+                      <td>{policy.id}</td>
+                      <td>{policy.name}</td>
+                      <td>{policy.resourceType || "-"}</td>
+                      <td>{policy.action || "-"}</td>
+                      <td>{policy.effect || "-"}</td>
+                      <td>
+                        {policy.enabled ? (
+                          <span className="badge badge-success">ENABLED</span>
+                        ) : (
+                          <span className="badge badge-error">DISABLED</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="text-center text-gray-500 py-3">
+                      No policies found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           )}
         </div>
 
-        {/* ADMIN PANEL Access */}
-        {canViewAdminPanel ? (
-          <div className="bg-green-100 p-4 rounded">
-            <h2 className="font-semibold text-green-700 mb-2">Admin Panel</h2>
-            <p>Welcome, Admin. You can manage configurations here.</p>
-          </div>
-        ) : (
-          <div className="bg-yellow-50 text-yellow-700 p-3 rounded">
-            ⚠️ You don’t have access to the Admin Panel.
-          </div>
-        )}
       </div>
-    </div>
-  )
-}
+      {/* --- END FLEX CONTAINER --- */}
 
-export default DashboardPage
+      <button
+        onClick={() => navigate("/roles")}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+      >
+        ✏️ Edit Roles
+      </button>
+    </div>
+
+  );
+};
+
+export default DashboardPage;
