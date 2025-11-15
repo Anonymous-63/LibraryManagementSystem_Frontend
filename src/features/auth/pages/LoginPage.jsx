@@ -30,8 +30,8 @@ const LoginPage = () => {
     } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            id: "operator1",
-            password: "password123",
+            id: "SuperAdmin",
+            password: "senergy@0203",
         },
     });
 

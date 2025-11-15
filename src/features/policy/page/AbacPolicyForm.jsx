@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { savePolicy } from "../dashboardSlice";
+import { savePolicy } from "../policySlice";
 
 export default function AbacPolicyForm() {
     const dispatch = useDispatch();
