@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { usePermissions } from "../../../utils/usePermissions";
 import { useEffect, useState } from "react";
 import { RESOURCE_TYPE } from "../../../utils/constants";
+import { getRoles } from "../roleSlice";
 
 const RolePage = () => {
     const dispatch = useDispatch();
@@ -16,6 +17,7 @@ const RolePage = () => {
             try {
                 const res = await dispatch(getRoles()).unwrap();
                 setRoles(res.data);
+                
             } catch (error) {
                 console.error("Error loading roles:", error);
             } finally {
